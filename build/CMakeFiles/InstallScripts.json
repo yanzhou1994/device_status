@@ -1,9 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"D:/LVGL_project/device_status/build/cmake_install.cmake",
-		"D:/LVGL_project/device_status/build/lvgl/cmake_install.cmake",
-		"D:/LVGL_project/device_status/build/ui/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
