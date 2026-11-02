@@ -4,7 +4,10 @@
  布局：
    第 1 行  标题栏（标题 + 时间 + 设备/趋势 分段控件）
    第 2 行  设备运行状态（状态列表） | 温湿度传感器数据（两个环形仪表）
-   第 3 行  数字量输入/输出（DI/DO 各 4 路） | 设备报警记录（表格）
+   第 3 行  数字量输入 DI(4) | 数字量输出 DO(4)（整行铺满）
+
+ DI 每路 4 个数据点，只读展示 ON/OFF；DO 每路 4 个数据点，用 lv_button 控件
+ 开关，点击切换 ON/OFF（开光逻辑在 device_status.c 的 device_status_io_init 里）。
 
  所有坐标都是 1080x600 画布上的绝对像素，与
  screens/device_status_main_gen.c 一一对应。
@@ -26,100 +29,448 @@
 			shadow_spread="-2"
 		/>
 		<!-- 无背景的纯布局容器 -->
-		<style name="plain" bg_opa="0%" border_width="0" radius="0" pad_all="0" />
+		<style
+			name="plain"
+			bg_opa="0%"
+			border_width="0"
+			radius="0"
+			pad_all="0"
+		/>
 		<!-- 状态圆点 -->
 		<style name="dot" radius="999" border_width="0" pad_all="0" />
-		<!-- 按钮：ON（实心青） / OFF（白底描边） -->
-		<style name="btn_on" bg_color="0x16a6a1" bg_opa="100%" radius="6" border_width="0" shadow_width="0" />
-		<style name="btn_off" bg_color="0xffffff" bg_opa="100%" radius="6" border_width="1" border_color="0xeaedf0" shadow_width="0" />
-		<!-- 报警等级徽标 -->
-		<style name="badge" radius="4" border_width="0" pad_all="0" />
+		<!-- DI 数据点底板（只读） -->
+		<style
+			name="tile"
+			bg_color="0xf7f8fa"
+			bg_opa="100%"
+			radius="10"
+			border_width="0"
+			pad_all="0"
+			shadow_width="0"
+		/>
+		<!-- DO 数据点底板（按钮，白底描边） -->
+		<style
+			name="tile_btn"
+			bg_color="0xffffff"
+			bg_opa="100%"
+			radius="10"
+			border_width="1"
+			border_color="0xe6e9ec"
+			pad_all="0"
+			shadow_width="0"
+		/>
+		<!-- ON / OFF 状态标记 -->
+		<style
+			name="mark_on"
+			bg_color="0x16a6a1"
+			bg_opa="100%"
+			radius="8"
+			border_width="0"
+			pad_all="0"
+			shadow_width="0"
+		/>
+		<style
+			name="mark_off"
+			bg_color="0xf0f2f5"
+			bg_opa="100%"
+			radius="8"
+			border_width="0"
+			pad_all="0"
+			shadow_width="0"
+		/>
 		<!-- 分段控件：轨道 + 选中态 -->
-		<style name="seg_track" bg_color="0xedeef1" bg_opa="100%" radius="999" border_width="0" pad_all="0" />
-		<style name="seg_active" bg_color="0xffffff" bg_opa="100%" radius="999" border_width="0" shadow_color="0x6b7683" shadow_width="6" shadow_opa="16%" shadow_offset_y="1" />
-		<!-- 1px 分隔线 / 表格横线 -->
-		<style name="divider" bg_color="0xeaedf0" bg_opa="100%" border_width="0" radius="0" pad_all="0" />
-		<style name="hline" bg_color="0xf0f2f4" bg_opa="100%" border_width="0" radius="0" pad_all="0" />
+		<style
+			name="seg_track"
+			bg_color="0xedeef1"
+			bg_opa="100%"
+			radius="999"
+			border_width="0"
+			pad_all="0"
+		/>
+		<style
+			name="seg_active"
+			bg_color="0xffffff"
+			bg_opa="100%"
+			radius="999"
+			border_width="0"
+			shadow_color="0x6b7683"
+			shadow_width="6"
+			shadow_opa="16%"
+			shadow_offset_y="1"
+		/>
+		<!-- 1px 分隔线 -->
+		<style
+			name="divider"
+			bg_color="0xeaedf0"
+			bg_opa="100%"
+			border_width="0"
+			radius="0"
+			pad_all="0"
+		/>
 		<!-- 环形仪表：底环 / 指示弧 / 底部细条 -->
-		<style name="arc_track" arc_color="0xe9ecef" arc_width="6" arc_rounded="true" bg_opa="0%" />
-		<style name="arc_ind" arc_color="0x16a6a1" arc_width="6" arc_rounded="true" pad_all="0" />
+		<style
+			name="arc_track"
+			arc_color="0xe9ecef"
+			arc_width="6"
+			arc_rounded="true"
+			bg_opa="0%"
+		/>
+		<style
+			name="arc_ind"
+			arc_color="0x16a6a1"
+			arc_width="6"
+			arc_rounded="true"
+			pad_all="0"
+		/>
 		<!-- 旋钮默认是一个蓝色圆点，静态仪表里要隐藏 -->
-		<style name="arc_knob" bg_opa="0%" border_width="0" pad_all="0" shadow_width="0" />
-		<style name="bar_track" bg_color="0xe9ecef" bg_opa="100%" radius="999" />
+		<style
+			name="arc_knob"
+			bg_opa="0%"
+			border_width="0"
+			pad_all="0"
+			shadow_width="0"
+		/>
+		<style
+			name="bar_track"
+			bg_color="0xe9ecef"
+			bg_opa="100%"
+			radius="999"
+		/>
 		<style name="bar_ind" bg_color="0x16a6a1" bg_opa="100%" radius="999" />
 	</styles>
 
-	<view style_bg_color="0xf2f4f6" style_bg_opa="100%" style_pad_all="0" scrollable="false">
-
+	<view
+		style_bg_color="0xf2f4f6"
+		style_bg_opa="100%"
+		style_pad_all="0"
+		scrollable="false"
+	>
 		<!-- ============ 第 1 行：标题栏 ============ -->
-		<lv_obj scrollable="false" name="top_bar" x="48" y="28" width="984" height="64">
+		<lv_obj
+			scrollable="false"
+			name="top_bar"
+			x="48"
+			y="28"
+			width="984"
+			height="64"
+		>
 			<style name="card" />
-			<lv_label name="title" x="20" y="15" text="设备状态总览" style_text_font="font_title" style_text_color="0x17191c" />
-			<lv_label name="time" x="196" y="25" text="2026-11-02 14:32:08" style_text_font="font_small" style_text_color="0x9aa0a6" />
+			<lv_label
+				name="title"
+				x="20"
+				y="15"
+				text="设备状态总览"
+				style_text_font="font_title"
+				style_text_color="0x17191c"
+			/>
+			<lv_label
+				name="time"
+				x="196"
+				y="25"
+				text="2026-11-02 14:32:08"
+				style_text_font="font_small"
+				style_text_color="0x9aa0a6"
+			/>
 
-			<lv_obj scrollable="false" name="seg" align="right_mid" x="-22" width="104" height="30">
+			<lv_obj
+				scrollable="false"
+				name="seg"
+				align="right_mid"
+				x="-22"
+				width="104"
+				height="30"
+			>
 				<style name="seg_track" />
-				<lv_obj scrollable="false" name="seg_pill" x="3" y="2" width="46" height="26">
+				<lv_obj
+					scrollable="false"
+					name="seg_pill"
+					x="3"
+					y="2"
+					width="46"
+					height="26"
+				>
 					<style name="seg_active" />
-					<lv_label name="seg_pill_label" align="center" text="设备" style_text_font="font_body" style_text_color="0x17191c" />
+					<lv_label
+						name="seg_pill_label"
+						align="center"
+						text="设备"
+						style_text_font="font_body"
+						style_text_color="0x17191c"
+					/>
 				</lv_obj>
-				<lv_label name="seg_other_label" align="right_mid" x="-14" text="趋势" style_text_font="font_body" style_text_color="0x9aa0a6" />
+				<lv_label
+					name="seg_other_label"
+					align="right_mid"
+					x="-14"
+					text="趋势"
+					style_text_font="font_body"
+					style_text_color="0x9aa0a6"
+				/>
 			</lv_obj>
 		</lv_obj>
 
 		<!-- ============ 第 2 行左：设备运行状态 ============ -->
-		<lv_obj scrollable="false" name="status_card" x="48" y="110" width="452" height="246">
+		<lv_obj
+			scrollable="false"
+			name="status_card"
+			x="48"
+			y="110"
+			width="452"
+			height="246"
+		>
 			<style name="card" />
-			<lv_label name="status_title" x="20" y="20" text="设备运行状态" style_text_font="font_h3" style_text_color="0x17191c" />
+			<lv_label
+				name="status_title"
+				x="20"
+				y="20"
+				text="设备运行状态"
+				style_text_font="font_h3"
+				style_text_color="0x17191c"
+			/>
 
-			<lv_obj scrollable="false" name="row_pump" x="0" y="74" width="452" height="28">
+			<lv_obj
+				scrollable="false"
+				name="row_pump"
+				x="0"
+				y="74"
+				width="452"
+				height="28"
+			>
 				<style name="plain" />
-				<lv_obj scrollable="false" name="dot_pump" x="20" y="7" width="14" height="14" style_bg_color="0x4fb745" style_bg_opa="100%"><style name="dot" /></lv_obj>
-				<lv_label name="name_pump" x="46" y="5" text="1#水泵" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_label name="state_pump" align="right_mid" x="-28" text="运行中" style_text_font="font_body" style_text_color="0x2f7fe0" />
+				<lv_obj
+					scrollable="false"
+					name="dot_pump"
+					x="20"
+					y="7"
+					width="14"
+					height="14"
+					style_bg_color="0x4fb745"
+					style_bg_opa="100%"
+				>
+					<style name="dot" />
+				</lv_obj>
+				<lv_label
+					name="name_pump"
+					x="46"
+					y="5"
+					text="1#水泵"
+					style_text_font="font_body"
+					style_text_color="0x4c5257"
+				/>
+				<lv_label
+					name="state_pump"
+					align="right_mid"
+					x="-28"
+					text="运行中"
+					style_text_font="font_body"
+					style_text_color="0x2f7fe0"
+				/>
 			</lv_obj>
 
-			<lv_obj scrollable="false" name="row_conv" x="0" y="117" width="452" height="28">
+			<lv_obj
+				scrollable="false"
+				name="row_conv"
+				x="0"
+				y="117"
+				width="452"
+				height="28"
+			>
 				<style name="plain" />
-				<lv_obj scrollable="false" name="dot_conv" x="20" y="7" width="14" height="14" style_bg_color="0xf5d42b" style_bg_opa="100%"><style name="dot" /></lv_obj>
-				<lv_label name="name_conv" x="46" y="5" text="23#传送带" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_label name="state_conv" align="right_mid" x="-28" text="待机" style_text_font="font_body" style_text_color="0xc9a227" />
+				<lv_obj
+					scrollable="false"
+					name="dot_conv"
+					x="20"
+					y="7"
+					width="14"
+					height="14"
+					style_bg_color="0xf5d42b"
+					style_bg_opa="100%"
+				>
+					<style name="dot" />
+				</lv_obj>
+				<lv_label
+					name="name_conv"
+					x="46"
+					y="5"
+					text="2#传送带"
+					style_text_font="font_body"
+					style_text_color="0x4c5257"
+				/>
+				<lv_label
+					name="state_conv"
+					align="right_mid"
+					x="-28"
+					text="待机"
+					style_text_font="font_body"
+					style_text_color="0xc9a227"
+				/>
 			</lv_obj>
 
-			<lv_obj scrollable="false" name="row_comp" x="0" y="160" width="452" height="28">
+			<lv_obj
+				scrollable="false"
+				name="row_comp"
+				x="0"
+				y="160"
+				width="452"
+				height="28"
+			>
 				<style name="plain" />
-				<lv_obj scrollable="false" name="dot_comp" x="20" y="7" width="14" height="14" style_bg_color="0xe23b2f" style_bg_opa="100%"><style name="dot" /></lv_obj>
-				<lv_label name="name_comp" x="46" y="5" text="4#压缩机" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_label name="state_comp" align="right_mid" x="-28" text="运行中" style_text_font="font_body" style_text_color="0x2f7fe0" />
+				<lv_obj
+					scrollable="false"
+					name="dot_comp"
+					x="20"
+					y="7"
+					width="14"
+					height="14"
+					style_bg_color="0xe23b2f"
+					style_bg_opa="100%"
+				>
+					<style name="dot" />
+				</lv_obj>
+				<lv_label
+					name="name_comp"
+					x="46"
+					y="5"
+					text="3#压缩机"
+					style_text_font="font_body"
+					style_text_color="0x4c5257"
+				/>
+				<lv_label
+					name="state_comp"
+					align="right_mid"
+					x="-28"
+					text="运行中"
+					style_text_font="font_body"
+					style_text_color="0x2f7fe0"
+				/>
 			</lv_obj>
 
-			<lv_obj scrollable="false" name="row_valve" x="0" y="203" width="452" height="28">
+			<lv_obj
+				scrollable="false"
+				name="row_valve"
+				x="0"
+				y="203"
+				width="452"
+				height="28"
+			>
 				<style name="plain" />
-				<lv_obj scrollable="false" name="dot_valve" x="20" y="7" width="14" height="14" style_bg_color="0xc2c6c9" style_bg_opa="100%"><style name="dot" /></lv_obj>
-				<lv_label name="name_valve" x="46" y="5" text="5#阀门" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_label name="state_valve" align="right_mid" x="-28" text="离线" style_text_font="font_body" style_text_color="0x9aa0a6" />
+				<lv_obj
+					scrollable="false"
+					name="dot_valve"
+					x="20"
+					y="7"
+					width="14"
+					height="14"
+					style_bg_color="0xc2c6c9"
+					style_bg_opa="100%"
+				>
+					<style name="dot" />
+				</lv_obj>
+				<lv_label
+					name="name_valve"
+					x="46"
+					y="5"
+					text="4#阀门"
+					style_text_font="font_body"
+					style_text_color="0x4c5257"
+				/>
+				<lv_label
+					name="state_valve"
+					align="right_mid"
+					x="-28"
+					text="离线"
+					style_text_font="font_body"
+					style_text_color="0x9aa0a6"
+				/>
 			</lv_obj>
 		</lv_obj>
 
 		<!-- ============ 第 2 行右：温湿度 ============ -->
-		<lv_obj scrollable="false" name="sensor_card" x="520" y="110" width="512" height="246">
+		<lv_obj
+			scrollable="false"
+			name="sensor_card"
+			x="520"
+			y="110"
+			width="512"
+			height="246"
+		>
 			<style name="card" />
-			<lv_label name="sensor_title" x="20" y="20" text="温湿度传感器数据" style_text_font="font_h3" style_text_color="0x17191c" />
+			<lv_label
+				name="sensor_title"
+				x="20"
+				y="20"
+				text="温湿度传感器数据"
+				style_text_font="font_h3"
+				style_text_color="0x17191c"
+			/>
 
 			<!-- 温度环 -->
-			<lv_arc name="arc_temp" x="14" y="74" width="132" height="132" rotation="270" bg_start_angle="0" bg_end_angle="360" min_value="0" max_value="100" value="78">
+			<lv_arc
+				name="arc_temp"
+				x="14"
+				y="74"
+				width="132"
+				height="132"
+				rotation="270"
+				bg_start_angle="0"
+				bg_end_angle="360"
+				min_value="0"
+				max_value="100"
+				value="78"
+			>
 				<style name="arc_track" selector="main" />
 				<style name="arc_ind" selector="indicator" />
 				<style name="arc_knob" selector="knob" />
-				<lv_obj scrollable="false" name="cont_temp" align="center" width="118" height="70">
+				<lv_obj
+					scrollable="false"
+					name="cont_temp"
+					align="center"
+					width="118"
+					height="70"
+				>
 					<style name="plain" />
-					<lv_obj scrollable="false" name="row_temp" align="top_mid" width="118" height="34" flex_flow="row" style_flex_main_place="center" style_flex_cross_place="start" style_pad_column="0">
+					<lv_obj
+						scrollable="false"
+						name="row_temp"
+						align="top_mid"
+						width="118"
+						height="34"
+						flex_flow="row"
+						style_flex_main_place="center"
+						style_flex_cross_place="start"
+						style_pad_column="0"
+					>
 						<style name="plain" />
-						<lv_label name="val_temp" text="24.6" style_text_font="font_value" style_text_color="0x16a6a1" />
-						<lv_label name="unit_temp" text="℃" style_text_font="font_small" style_text_color="0x16a6a1" />
+						<lv_label
+							name="val_temp"
+							text="24.6"
+							style_text_font="font_value"
+							style_text_color="0x16a6a1"
+						/>
+						<lv_label
+							name="unit_temp"
+							text="℃"
+							style_text_font="font_small"
+							style_text_color="0x16a6a1"
+						/>
 					</lv_obj>
-					<lv_label name="cap_temp" align="top_mid" y="34" text="温度" style_text_font="font_small" style_text_color="0x9aa0a6" />
-					<lv_bar name="bar_temp" align="bottom_mid" width="74" height="4" min_value="0" max_value="100" value="55">
+					<lv_label
+						name="cap_temp"
+						align="top_mid"
+						y="34"
+						text="温度"
+						style_text_font="font_small"
+						style_text_color="0x9aa0a6"
+					/>
+					<lv_bar
+						name="bar_temp"
+						align="bottom_mid"
+						width="74"
+						height="4"
+						min_value="0"
+						max_value="100"
+						value="55"
+					>
 						<style name="bar_track" selector="main" />
 						<style name="bar_ind" selector="indicator" />
 					</lv_bar>
@@ -127,19 +478,72 @@
 			</lv_arc>
 
 			<!-- 湿度环 -->
-			<lv_arc name="arc_humi" x="204" y="74" width="132" height="132" rotation="270" bg_start_angle="0" bg_end_angle="360" min_value="0" max_value="100" value="72">
+			<lv_arc
+				name="arc_humi"
+				x="204"
+				y="74"
+				width="132"
+				height="132"
+				rotation="270"
+				bg_start_angle="0"
+				bg_end_angle="360"
+				min_value="0"
+				max_value="100"
+				value="72"
+			>
 				<style name="arc_track" selector="main" />
 				<style name="arc_ind" selector="indicator" />
 				<style name="arc_knob" selector="knob" />
-				<lv_obj scrollable="false" name="cont_humi" align="center" width="118" height="70">
+				<lv_obj
+					scrollable="false"
+					name="cont_humi"
+					align="center"
+					width="118"
+					height="70"
+				>
 					<style name="plain" />
-					<lv_obj scrollable="false" name="row_humi" align="top_mid" width="118" height="34" flex_flow="row" style_flex_main_place="center" style_flex_cross_place="start" style_pad_column="0">
+					<lv_obj
+						scrollable="false"
+						name="row_humi"
+						align="top_mid"
+						width="118"
+						height="34"
+						flex_flow="row"
+						style_flex_main_place="center"
+						style_flex_cross_place="start"
+						style_pad_column="0"
+					>
 						<style name="plain" />
-						<lv_label name="val_humi" text="58" style_text_font="font_value" style_text_color="0x16a6a1" />
-						<lv_label name="unit_humi" text="%RH" style_text_font="font_small" style_text_color="0x16a6a1" />
+						<lv_label
+							name="val_humi"
+							text="58"
+							style_text_font="font_value"
+							style_text_color="0x16a6a1"
+						/>
+						<lv_label
+							name="unit_humi"
+							text="%RH"
+							style_text_font="font_small"
+							style_text_color="0x16a6a1"
+						/>
 					</lv_obj>
-					<lv_label name="cap_humi" align="top_mid" y="34" text="湿度" style_text_font="font_small" style_text_color="0x9aa0a6" />
-					<lv_bar name="bar_humi" align="bottom_mid" width="74" height="4" min_value="0" max_value="100" value="60">
+					<lv_label
+						name="cap_humi"
+						align="top_mid"
+						y="34"
+						text="湿度"
+						style_text_font="font_small"
+						style_text_color="0x9aa0a6"
+					/>
+					<lv_bar
+						name="bar_humi"
+						align="bottom_mid"
+						width="74"
+						height="4"
+						min_value="0"
+						max_value="100"
+						value="60"
+					>
 						<style name="bar_track" selector="main" />
 						<style name="bar_ind" selector="indicator" />
 					</lv_bar>
@@ -147,72 +551,334 @@
 			</lv_arc>
 		</lv_obj>
 
-		<!-- ============ 第 3 行左：DI / DO ============ -->
-		<lv_obj scrollable="false" name="io_card" x="48" y="378" width="452" height="214">
+		<!-- ============ 第 3 行：数字量 DI / DO ============ -->
+		<lv_obj
+			scrollable="false"
+			name="io_card"
+			x="48"
+			y="378"
+			width="984"
+			height="214"
+		>
 			<style name="card" />
-			<lv_obj scrollable="false" name="io_divider" x="230" y="20" width="1" height="174"><style name="divider" /></lv_obj>
+			<lv_obj
+				scrollable="false"
+				name="io_divider"
+				x="492"
+				y="20"
+				width="1"
+				height="174"
+			>
+				<style name="divider" />
+			</lv_obj>
 
-			<lv_label name="di_title" x="16" y="20" text="数字量输入 DI(4)" style_text_font="font_h4" style_text_color="0x17191c" />
-			<lv_label name="di_caption" x="46" y="58" text="DI1" style_text_font="font_small" style_text_color="0x9aa0a6" />
+			<!-- ---- DI：只读状态显示，4 个数据点 ---- -->
+			<lv_label
+				name="di_title"
+				x="24"
+				y="18"
+				text="数字量输入 DI(4)"
+				style_text_font="font_h4"
+				style_text_color="0x17191c"
+			/>
 
-			<lv_obj scrollable="false" name="di1" x="16" y="84" width="94" height="34"><style name="btn_on" /><lv_label align="center" text="ON" style_text_font="font_body" style_text_color="0xffffff" /></lv_obj>
-			<lv_obj scrollable="false" name="di2" x="120" y="84" width="94" height="34"><style name="btn_off" /><lv_label align="center" text="ON" style_text_font="font_body" style_text_color="0x6b7075" /></lv_obj>
-			<lv_obj scrollable="false" name="di3" x="16" y="126" width="94" height="34"><style name="btn_off" /><lv_label align="center" text="ON" style_text_font="font_body" style_text_color="0x6b7075" /></lv_obj>
-			<lv_obj scrollable="false" name="di4" x="120" y="126" width="94" height="34"><style name="btn_off" /><lv_label align="center" text="OFF" style_text_font="font_body" style_text_color="0x6b7075" /></lv_obj>
-
-			<lv_label name="do_title" x="246" y="20" text="数字量输出 DO(4)" style_text_font="font_h4" style_text_color="0x17191c" />
-			<lv_label name="do_caption" x="276" y="58" text="DO1" style_text_font="font_small" style_text_color="0x9aa0a6" />
-
-			<lv_obj scrollable="false" name="do1" x="246" y="84" width="90" height="34"><style name="btn_on" /><lv_label align="center" text="ON" style_text_font="font_body" style_text_color="0xffffff" /></lv_obj>
-			<lv_obj scrollable="false" name="do2" x="346" y="84" width="90" height="34"><style name="btn_off" /><lv_label align="center" text="OFF" style_text_font="font_body" style_text_color="0x6b7075" /></lv_obj>
-			<lv_obj scrollable="false" name="do3" x="246" y="126" width="90" height="34"><style name="btn_off" /><lv_label align="center" text="ON" style_text_font="font_body" style_text_color="0x6b7075" /></lv_obj>
-			<lv_obj scrollable="false" name="do4" x="346" y="126" width="90" height="34"><style name="btn_off" /><lv_label align="center" text="OFF" style_text_font="font_body" style_text_color="0x6b7075" /></lv_obj>
-		</lv_obj>
-
-		<!-- ============ 第 3 行右：报警记录 ============ -->
-		<lv_obj scrollable="false" name="alarm_card" x="520" y="378" width="512" height="214">
-			<style name="card" />
-			<lv_label name="alarm_title" x="20" y="20" text="设备报警记录" style_text_font="font_h4" style_text_color="0x17191c" />
-
-			<lv_obj scrollable="false" name="alarm_table" x="20" y="52" width="472" height="160">
-				<style name="plain" />
-
-				<!-- 表头 -->
-				<lv_label name="th_time" x="8" y="4" text="时间" style_text_font="font_small" style_text_color="0x9aa0a6" />
-				<lv_label name="th_dev" x="84" y="4" text="设备" style_text_font="font_small" style_text_color="0x9aa0a6" />
-				<lv_label name="th_msg" x="184" y="4" text="报警内容" style_text_font="font_small" style_text_color="0x9aa0a6" />
-				<lv_label name="th_level" align="top_right" x="-24" y="4" text="等级" style_text_font="font_small" style_text_color="0x9aa0a6" />
-				<lv_obj scrollable="false" name="hline_1" x="8" y="28" width="456" height="1"><style name="hline" /></lv_obj>
-
-				<!-- 第 1 条：严重 -->
-				<lv_label name="r1_time" x="8" y="45" text="10:02" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_label name="r1_dev" x="84" y="45" text="3#传送带" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_label name="r1_msg" x="184" y="45" text="过载报警" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_obj scrollable="false" name="r1_badge" x="394" y="42" width="62" height="24" style_bg_color="0xe23a2e" style_bg_opa="100%">
-					<style name="badge" />
-					<lv_label align="center" text="严重" style_text_font="font_small" style_text_color="0xffffff" />
-				</lv_obj>
-				<lv_obj scrollable="false" name="hline_2" x="8" y="74" width="456" height="1"><style name="hline" /></lv_obj>
-
-				<!-- 第 2 条：警告 -->
-				<lv_label name="r2_time" x="8" y="85" text="09:45" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_label name="r2_dev" x="84" y="85" text="冷库" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_label name="r2_msg" x="184" y="85" text="温度偏高" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_obj scrollable="false" name="r2_badge" x="394" y="82" width="62" height="24" style_bg_color="0xf2a33c" style_bg_opa="100%">
-					<style name="badge" />
-					<lv_label align="center" text="警告" style_text_font="font_small" style_text_color="0xffffff" />
-				</lv_obj>
-				<lv_obj scrollable="false" name="hline_3" x="8" y="114" width="456" height="1"><style name="hline" /></lv_obj>
-
-				<!-- 第 3 条：警告 -->
-				<lv_label name="r3_time" x="8" y="125" text="09:21" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_label name="r3_dev" x="84" y="125" text="2#风机" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_label name="r3_msg" x="184" y="125" text="振动异常" style_text_font="font_body" style_text_color="0x4c5257" />
-				<lv_obj scrollable="false" name="r3_badge" x="394" y="122" width="62" height="24" style_bg_color="0xf2a33c" style_bg_opa="100%">
-					<style name="badge" />
-					<lv_label align="center" text="警告" style_text_font="font_small" style_text_color="0xffffff" />
+			<lv_obj
+				scrollable="false"
+				name="di1"
+				x="24"
+				y="56"
+				width="105"
+				height="136"
+			>
+				<style name="tile" />
+				<lv_label
+					name="di1_name"
+					align="top_mid"
+					y="28"
+					text="DI1"
+					style_text_font="font_small"
+					style_text_color="0x9aa0a6"
+				/>
+				<lv_obj
+					scrollable="false"
+					name="di1_state"
+					align="top_mid"
+					y="60"
+					width="74"
+					height="38"
+				>
+					<style name="mark_on" />
+					<lv_label
+						name="di1_state_label"
+						align="center"
+						text="ON"
+						style_text_font="font_body"
+						style_text_color="0xffffff"
+					/>
 				</lv_obj>
 			</lv_obj>
+
+			<lv_obj
+				scrollable="false"
+				name="di2"
+				x="137"
+				y="56"
+				width="105"
+				height="136"
+			>
+				<style name="tile" />
+				<lv_label
+					name="di2_name"
+					align="top_mid"
+					y="28"
+					text="DI2"
+					style_text_font="font_small"
+					style_text_color="0x9aa0a6"
+				/>
+				<lv_obj
+					scrollable="false"
+					name="di2_state"
+					align="top_mid"
+					y="60"
+					width="74"
+					height="38"
+				>
+					<style name="mark_off" />
+					<lv_label
+						name="di2_state_label"
+						align="center"
+						text="OFF"
+						style_text_font="font_body"
+						style_text_color="0x8a9096"
+					/>
+				</lv_obj>
+			</lv_obj>
+
+			<lv_obj
+				scrollable="false"
+				name="di3"
+				x="250"
+				y="56"
+				width="105"
+				height="136"
+			>
+				<style name="tile" />
+				<lv_label
+					name="di3_name"
+					align="top_mid"
+					y="28"
+					text="DI3"
+					style_text_font="font_small"
+					style_text_color="0x9aa0a6"
+				/>
+				<lv_obj
+					scrollable="false"
+					name="di3_state"
+					align="top_mid"
+					y="60"
+					width="74"
+					height="38"
+				>
+					<style name="mark_off" />
+					<lv_label
+						name="di3_state_label"
+						align="center"
+						text="OFF"
+						style_text_font="font_body"
+						style_text_color="0x8a9096"
+					/>
+				</lv_obj>
+			</lv_obj>
+
+			<lv_obj
+				scrollable="false"
+				name="di4"
+				x="363"
+				y="56"
+				width="105"
+				height="136"
+			>
+				<style name="tile" />
+				<lv_label
+					name="di4_name"
+					align="top_mid"
+					y="28"
+					text="DI4"
+					style_text_font="font_small"
+					style_text_color="0x9aa0a6"
+				/>
+				<lv_obj
+					scrollable="false"
+					name="di4_state"
+					align="top_mid"
+					y="60"
+					width="74"
+					height="38"
+				>
+					<style name="mark_on" />
+					<lv_label
+						name="di4_state_label"
+						align="center"
+						text="ON"
+						style_text_font="font_body"
+						style_text_color="0xffffff"
+					/>
+				</lv_obj>
+			</lv_obj>
+
+			<!-- ---- DO：按钮控件，点击切换，4 个数据点 ---- -->
+			<lv_label
+				name="do_title"
+				x="516"
+				y="18"
+				text="数字量输出 DO(4)"
+				style_text_font="font_h4"
+				style_text_color="0x17191c"
+			/>
+
+			<lv_button
+				scrollable="false"
+				name="do1"
+				x="516"
+				y="56"
+				width="105"
+				height="136"
+			>
+				<style name="tile_btn" />
+				<lv_label
+					name="do1_name"
+					align="top_mid"
+					y="28"
+					text="DO1"
+					style_text_font="font_small"
+					style_text_color="0x9aa0a6"
+				/>
+				<lv_obj
+					scrollable="false"
+					name="do1_state"
+					align="top_mid"
+					y="60"
+					width="74"
+					height="38"
+				>
+					<style name="mark_on" />
+					<lv_label
+						name="do1_state_label"
+						align="center"
+						text="ON"
+						style_text_font="font_body"
+						style_text_color="0xffffff"
+					/>
+				</lv_obj>
+			</lv_button>
+
+			<lv_button
+				scrollable="false"
+				name="do2"
+				x="629"
+				y="56"
+				width="105"
+				height="136"
+			>
+				<style name="tile_btn" />
+				<lv_label
+					name="do2_name"
+					align="top_mid"
+					y="28"
+					text="DO2"
+					style_text_font="font_small"
+					style_text_color="0x9aa0a6"
+				/>
+				<lv_obj
+					scrollable="false"
+					name="do2_state"
+					align="top_mid"
+					y="60"
+					width="74"
+					height="38"
+				>
+					<style name="mark_off" />
+					<lv_label
+						name="do2_state_label"
+						align="center"
+						text="OFF"
+						style_text_font="font_body"
+						style_text_color="0x8a9096"
+					/>
+				</lv_obj>
+			</lv_button>
+
+			<lv_button
+				scrollable="false"
+				name="do3"
+				x="742"
+				y="56"
+				width="105"
+				height="136"
+			>
+				<style name="tile_btn" />
+				<lv_label
+					name="do3_name"
+					align="top_mid"
+					y="28"
+					text="DO3"
+					style_text_font="font_small"
+					style_text_color="0x9aa0a6"
+				/>
+				<lv_obj
+					scrollable="false"
+					name="do3_state"
+					align="top_mid"
+					y="60"
+					width="74"
+					height="38"
+				>
+					<style name="mark_off" />
+					<lv_label
+						name="do3_state_label"
+						align="center"
+						text="OFF"
+						style_text_font="font_body"
+						style_text_color="0x8a9096"
+					/>
+				</lv_obj>
+			</lv_button>
+
+			<lv_button
+				scrollable="false"
+				name="do4"
+				x="855"
+				y="56"
+				width="105"
+				height="136"
+			>
+				<style name="tile_btn" />
+				<lv_label
+					name="do4_name"
+					align="top_mid"
+					y="28"
+					text="DO4"
+					style_text_font="font_small"
+					style_text_color="0x9aa0a6"
+				/>
+				<lv_obj
+					scrollable="false"
+					name="do4_state"
+					align="top_mid"
+					y="60"
+					width="74"
+					height="38"
+				>
+					<style name="mark_on" />
+					<lv_label
+						name="do4_state_label"
+						align="center"
+						text="ON"
+						style_text_font="font_body"
+						style_text_color="0xffffff"
+					/>
+				</lv_obj>
+			</lv_button>
 		</lv_obj>
 	</view>
 </screen>

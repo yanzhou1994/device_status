@@ -9220,7 +9220,7 @@ function checkIncomingModuleAPI() {
 }
 
 var ASM_CONSTS = {
-  17098779: $0 => {
+  17098763: $0 => {
     var str = UTF8ToString($0) + "\n\n" + "Abort/Retry/Ignore/AlwaysIgnore? [ariA] :";
     var reply = window.prompt(str, "i");
     if (reply === null) {
@@ -9228,7 +9228,7 @@ var ASM_CONSTS = {
     }
     return allocate(intArrayFromString(reply), "i8", ALLOC_NORMAL);
   },
-  17099004: () => {
+  17098988: () => {
     if (typeof (AudioContext) !== "undefined") {
       return true;
     } else if (typeof (webkitAudioContext) !== "undefined") {
@@ -9236,7 +9236,7 @@ var ASM_CONSTS = {
     }
     return false;
   },
-  17099151: () => {
+  17099135: () => {
     if ((typeof (navigator.mediaDevices) !== "undefined") && (typeof (navigator.mediaDevices.getUserMedia) !== "undefined")) {
       return true;
     } else if (typeof (navigator.webkitGetUserMedia) !== "undefined") {
@@ -9244,7 +9244,7 @@ var ASM_CONSTS = {
     }
     return false;
   },
-  17099385: $0 => {
+  17099369: $0 => {
     if (typeof (Module["SDL2"]) === "undefined") {
       Module["SDL2"] = {};
     }
@@ -9268,11 +9268,11 @@ var ASM_CONSTS = {
     }
     return SDL2.audioContext === undefined ? -1 : 0;
   },
-  17099937: () => {
+  17099921: () => {
     var SDL2 = Module["SDL2"];
     return SDL2.audioContext.sampleRate;
   },
-  17100005: ($0, $1, $2, $3) => {
+  17099989: ($0, $1, $2, $3) => {
     var SDL2 = Module["SDL2"];
     var have_microphone = function(stream) {
       if (SDL2.capture.silenceTimer !== undefined) {
@@ -9314,7 +9314,7 @@ var ASM_CONSTS = {
       }, have_microphone, no_microphone);
     }
   },
-  17101698: ($0, $1, $2, $3) => {
+  17101682: ($0, $1, $2, $3) => {
     var SDL2 = Module["SDL2"];
     SDL2.audio.scriptProcessorNode = SDL2.audioContext["createScriptProcessor"]($1, 0, $0);
     SDL2.audio.scriptProcessorNode["onaudioprocess"] = function(e) {
@@ -9346,7 +9346,7 @@ var ASM_CONSTS = {
       SDL2.audio.silenceTimer = setInterval(silence_callback, ($1 / SDL2.audioContext.sampleRate) * 1e3);
     }
   },
-  17102873: ($0, $1) => {
+  17102857: ($0, $1) => {
     var SDL2 = Module["SDL2"];
     var numChannels = SDL2.capture.currentCaptureBuffer.numberOfChannels;
     for (var c = 0; c < numChannels; ++c) {
@@ -9365,7 +9365,7 @@ var ASM_CONSTS = {
       }
     }
   },
-  17103478: ($0, $1) => {
+  17103462: ($0, $1) => {
     var SDL2 = Module["SDL2"];
     var buf = $0 >>> 2;
     var numChannels = SDL2.audio.currentOutputBuffer["numberOfChannels"];
@@ -9379,7 +9379,7 @@ var ASM_CONSTS = {
       }
     }
   },
-  17103967: $0 => {
+  17103951: $0 => {
     var SDL2 = Module["SDL2"];
     if ($0) {
       if (SDL2.capture.silenceTimer !== undefined) {
@@ -9413,7 +9413,7 @@ var ASM_CONSTS = {
       SDL2.audioContext = undefined;
     }
   },
-  17104973: ($0, $1, $2) => {
+  17104957: ($0, $1, $2) => {
     var w = $0;
     var h = $1;
     var pixels = $2;
@@ -9484,7 +9484,7 @@ var ASM_CONSTS = {
     }
     SDL2.ctx.putImageData(SDL2.image, 0, 0);
   },
-  17106441: ($0, $1, $2, $3, $4) => {
+  17106425: ($0, $1, $2, $3, $4) => {
     var w = $0;
     var h = $1;
     var hot_x = $2;
@@ -9521,18 +9521,18 @@ var ASM_CONSTS = {
     stringToUTF8(url, urlBuf, url.length + 1);
     return urlBuf;
   },
-  17107429: $0 => {
+  17107413: $0 => {
     if (Module["canvas"]) {
       Module["canvas"].style["cursor"] = UTF8ToString($0);
     }
   },
-  17107512: () => {
+  17107496: () => {
     if (Module["canvas"]) {
       Module["canvas"].style["cursor"] = "none";
     }
   },
-  17107581: () => window.innerWidth,
-  17107611: () => window.innerHeight
+  17107565: () => window.innerWidth,
+  17107595: () => window.innerHeight
 };
 
 function js_log_callback(message) {
@@ -9874,6 +9874,12 @@ var ___wasm_call_ctors = createExportWrapper("__wasm_call_ctors", 0);
 
 var _device_status_init = Module["_device_status_init"] = createExportWrapper("device_status_init", 1);
 
+var _free = Module["_free"] = createExportWrapper("free", 1);
+
+var _fflush = createExportWrapper("fflush", 1);
+
+var _malloc = Module["_malloc"] = createExportWrapper("malloc", 1);
+
 var _lvrt_emscripten_get_heap_size = Module["_lvrt_emscripten_get_heap_size"] = createExportWrapper("lvrt_emscripten_get_heap_size", 0);
 
 var _lvrt_emscripten_get_heap_max = Module["_lvrt_emscripten_get_heap_max"] = createExportWrapper("lvrt_emscripten_get_heap_max", 0);
@@ -9935,12 +9941,6 @@ var _lvrt_xml_test_run_stop = Module["_lvrt_xml_test_run_stop"] = createExportWr
 var _lvrt_health_check = Module["_lvrt_health_check"] = createExportWrapper("lvrt_health_check", 0);
 
 var _get_screenshot = Module["_get_screenshot"] = createExportWrapper("get_screenshot", 3);
-
-var _fflush = createExportWrapper("fflush", 1);
-
-var _malloc = Module["_malloc"] = createExportWrapper("malloc", 1);
-
-var _free = Module["_free"] = createExportWrapper("free", 1);
 
 var _device_status_set_target = Module["_device_status_set_target"] = createExportWrapper("device_status_set_target", 1);
 

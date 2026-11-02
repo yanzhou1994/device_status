@@ -34,7 +34,9 @@ int main(void)
     }
 
     /* Load the only screen of the project. */
-    lv_screen_load(device_status_main_create());
+    lv_obj_t * screen = device_status_main_create();
+    device_status_io_init(screen);   /* DO1..DO4 click toggling */
+    lv_screen_load(screen);
 
     while(1) {
         uint32_t idle_ms = lv_timer_handler();

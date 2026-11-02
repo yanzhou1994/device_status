@@ -27,6 +27,13 @@ extern "C" {
  */
 void device_status_init(const char * asset_path);
 
+/**
+ * Attach the digital output toggle behaviour (DO1..DO4) to a created screen.
+ * Call it with the object returned by device_status_main_create().
+ * @param root  root of the created screen tree
+ */
+void device_status_io_init(lv_obj_t * root);
+
 /**********************
  *      MACROS
  **********************/

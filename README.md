@@ -58,11 +58,27 @@ build/bin/lvgl_simulator.exe
 | 标题栏 | 设备状态总览 + 时间 + `设备/趋势` 分段控件 |
 | 设备运行状态 | 4 台设备（水泵/传送带/压缩机/阀门）状态圆点 + 状态文字（运行中/待机/离线） |
 | 温湿度传感器数据 | 两个 `lv_arc` 环形仪表，内含数值、单位、说明和底部进度细条 |
-| 数字量输入/输出 | DI(4) / DO(4)，各 4 个按钮，立起为 ON（青色实心） |
-| 设备报警记录 | 3 条报警，含时间/设备/内容/等级徽标（严重/警告） |
+| 数字量输入/输出 | 第 3 行整行铺满：DI1~DI4 只读显示 ON/OFF，DO1~DO4 用 `lv_button` 点击切换 ON/OFF |
 
 所有坐标按 1080x600 绝对定位，`screens/device_status_main.xml` 与
 `screens/device_status_main_gen.c` 一一对应，改完 XML 用编辑器 Regenerate 即可。
+
+## DO 开关逻辑
+
+DO1~DO4 在 XML 里是 `lv_button`，每个瓦片里有一个名为 `doN_state` 的状态胶囊
+和它的 `lv_label`。点击行为在 `device_status.c` 里：
+
+```c
+lv_obj_t * screen = device_status_main_create();
+device_status_io_init(screen);   /* 绑定 do1..do4 的 LV_EVENT_CLICKED */
+lv_screen_load(screen);
+```
+
+回调读当前标签文字（`ON`/`OFF`）取反，再同时切换胶囊底色（青 `0x16a6a1` / 灰
+`0xf0f2f5`）和文字颜色。初始状态就写在 XML 的 `text="ON|OFF"` 上，不用另外初始化。
+
+> `sim/main.c` 已在 `lv_screen_load()` 前调用 `device_status_io_init()`；
+> 自己写 main 时别忘了这一步，否则按钮点击无反应。
 
 ## 中文字体
 
