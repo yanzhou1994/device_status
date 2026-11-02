@@ -35,6 +35,10 @@ int main(void)
 
     /* Load the only screen of the project. */
     lv_obj_t * screen = device_status_main_create();
+    if(screen == NULL) {
+        LV_LOG_ERROR("屏幕创建失败；请在 LVGL Pro 中重新生成屏幕代码");
+        return 1;
+    }
     device_status_io_init(screen);   /* DO1..DO4 click toggling */
     lv_screen_load(screen);
 
