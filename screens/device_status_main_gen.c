@@ -46,6 +46,7 @@ lv_obj_t * device_status_main_create(void)
     static lv_style_t hline;
     static lv_style_t arc_track;
     static lv_style_t arc_ind;
+    static lv_style_t arc_knob;
     static lv_style_t bar_track;
     static lv_style_t bar_ind;
 
@@ -65,6 +66,7 @@ lv_obj_t * device_status_main_create(void)
         lv_style_init(&hline);
         lv_style_init(&arc_track);
         lv_style_init(&arc_ind);
+        lv_style_init(&arc_knob);
         lv_style_init(&bar_track);
         lv_style_init(&bar_ind);
 
@@ -130,6 +132,10 @@ lv_obj_t * device_status_main_create(void)
         lv_style_set_arc_width(&arc_ind, 6);
         lv_style_set_arc_rounded(&arc_ind, true);
         lv_style_set_pad_all(&arc_ind, 0);
+        lv_style_set_bg_opa(&arc_knob, (255 * 0 / 100));
+        lv_style_set_border_width(&arc_knob, 0);
+        lv_style_set_pad_all(&arc_knob, 0);
+        lv_style_set_shadow_width(&arc_knob, 0);
         lv_style_set_bg_color(&bar_track, lv_color_hex(0xe9ecef));
         lv_style_set_bg_opa(&bar_track, (255 * 100 / 100));
         lv_style_set_radius(&bar_track, 999);
@@ -146,7 +152,6 @@ lv_obj_t * device_status_main_create(void)
     #if DEVICE_STATUS_CHECK_COMPILE_TARGET(DEVICE_STATUS_TARGET_ALL)
     if (device_status_check_target(DEVICE_STATUS_TARGET_ALL)) {
         lv_obj_t * lv_obj_0 = lv_obj_create(NULL);
-        lv_obj_remove_flag(lv_obj_0, LV_OBJ_FLAG_SCROLLABLE);
         lv_obj_set_name_static(lv_obj_0, "device_status_main_#");
         lv_obj_set_style_bg_color(lv_obj_0, lv_color_hex(0xf2f4f6), 0);
         lv_obj_set_style_bg_opa(lv_obj_0, (255 * 100 / 100), 0);
@@ -154,7 +159,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_flag(lv_obj_0, LV_OBJ_FLAG_SCROLLABLE, false);
 
         lv_obj_t * top_bar = lv_obj_create(lv_obj_0);
-        lv_obj_remove_flag(top_bar, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(top_bar, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(top_bar, "top_bar");
         lv_obj_set_x(top_bar, 48);
         lv_obj_set_y(top_bar, 28);
@@ -178,7 +183,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(time, lv_color_hex(0x9aa0a6), 0);
 
         lv_obj_t * seg = lv_obj_create(top_bar);
-        lv_obj_remove_flag(seg, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(seg, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(seg, "seg");
         lv_obj_set_align(seg, LV_ALIGN_RIGHT_MID);
         lv_obj_set_x(seg, -22);
@@ -186,7 +191,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_height(seg, 30);
         lv_obj_add_style(seg, &seg_track, 0);
         lv_obj_t * seg_pill = lv_obj_create(seg);
-        lv_obj_remove_flag(seg_pill, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(seg_pill, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(seg_pill, "seg_pill");
         lv_obj_set_x(seg_pill, 3);
         lv_obj_set_y(seg_pill, 2);
@@ -209,7 +214,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(seg_other_label, lv_color_hex(0x9aa0a6), 0);
 
         lv_obj_t * status_card = lv_obj_create(lv_obj_0);
-        lv_obj_remove_flag(status_card, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(status_card, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(status_card, "status_card");
         lv_obj_set_x(status_card, 48);
         lv_obj_set_y(status_card, 110);
@@ -225,7 +230,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(status_title, lv_color_hex(0x17191c), 0);
 
         lv_obj_t * row_pump = lv_obj_create(status_card);
-        lv_obj_remove_flag(row_pump, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(row_pump, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(row_pump, "row_pump");
         lv_obj_set_x(row_pump, 0);
         lv_obj_set_y(row_pump, 74);
@@ -233,7 +238,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_height(row_pump, 28);
         lv_obj_add_style(row_pump, &plain, 0);
         lv_obj_t * dot_pump = lv_obj_create(row_pump);
-        lv_obj_remove_flag(dot_pump, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(dot_pump, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(dot_pump, "dot_pump");
         lv_obj_set_x(dot_pump, 20);
         lv_obj_set_y(dot_pump, 7);
@@ -260,7 +265,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(state_pump, lv_color_hex(0x2f7fe0), 0);
 
         lv_obj_t * row_conv = lv_obj_create(status_card);
-        lv_obj_remove_flag(row_conv, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(row_conv, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(row_conv, "row_conv");
         lv_obj_set_x(row_conv, 0);
         lv_obj_set_y(row_conv, 117);
@@ -268,7 +273,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_height(row_conv, 28);
         lv_obj_add_style(row_conv, &plain, 0);
         lv_obj_t * dot_conv = lv_obj_create(row_conv);
-        lv_obj_remove_flag(dot_conv, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(dot_conv, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(dot_conv, "dot_conv");
         lv_obj_set_x(dot_conv, 20);
         lv_obj_set_y(dot_conv, 7);
@@ -295,7 +300,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(state_conv, lv_color_hex(0xc9a227), 0);
 
         lv_obj_t * row_comp = lv_obj_create(status_card);
-        lv_obj_remove_flag(row_comp, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(row_comp, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(row_comp, "row_comp");
         lv_obj_set_x(row_comp, 0);
         lv_obj_set_y(row_comp, 160);
@@ -303,7 +308,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_height(row_comp, 28);
         lv_obj_add_style(row_comp, &plain, 0);
         lv_obj_t * dot_comp = lv_obj_create(row_comp);
-        lv_obj_remove_flag(dot_comp, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(dot_comp, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(dot_comp, "dot_comp");
         lv_obj_set_x(dot_comp, 20);
         lv_obj_set_y(dot_comp, 7);
@@ -330,7 +335,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(state_comp, lv_color_hex(0x2f7fe0), 0);
 
         lv_obj_t * row_valve = lv_obj_create(status_card);
-        lv_obj_remove_flag(row_valve, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(row_valve, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(row_valve, "row_valve");
         lv_obj_set_x(row_valve, 0);
         lv_obj_set_y(row_valve, 203);
@@ -338,7 +343,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_height(row_valve, 28);
         lv_obj_add_style(row_valve, &plain, 0);
         lv_obj_t * dot_valve = lv_obj_create(row_valve);
-        lv_obj_remove_flag(dot_valve, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(dot_valve, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(dot_valve, "dot_valve");
         lv_obj_set_x(dot_valve, 20);
         lv_obj_set_y(dot_valve, 7);
@@ -365,7 +370,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(state_valve, lv_color_hex(0x9aa0a6), 0);
 
         lv_obj_t * sensor_card = lv_obj_create(lv_obj_0);
-        lv_obj_remove_flag(sensor_card, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(sensor_card, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(sensor_card, "sensor_card");
         lv_obj_set_x(sensor_card, 520);
         lv_obj_set_y(sensor_card, 110);
@@ -381,7 +386,6 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(sensor_title, lv_color_hex(0x17191c), 0);
 
         lv_obj_t * arc_temp = lv_arc_create(sensor_card);
-        lv_obj_remove_style(arc_temp, NULL, LV_PART_KNOB);
         lv_obj_set_name(arc_temp, "arc_temp");
         lv_obj_set_x(arc_temp, 14);
         lv_obj_set_y(arc_temp, 74);
@@ -395,15 +399,16 @@ lv_obj_t * device_status_main_create(void)
         lv_arc_set_value(arc_temp, 78);
         lv_obj_add_style(arc_temp, &arc_track, LV_PART_MAIN);
         lv_obj_add_style(arc_temp, &arc_ind, LV_PART_INDICATOR);
+        lv_obj_add_style(arc_temp, &arc_knob, LV_PART_KNOB);
         lv_obj_t * cont_temp = lv_obj_create(arc_temp);
-        lv_obj_remove_flag(cont_temp, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(cont_temp, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(cont_temp, "cont_temp");
         lv_obj_set_align(cont_temp, LV_ALIGN_CENTER);
         lv_obj_set_width(cont_temp, 118);
         lv_obj_set_height(cont_temp, 70);
         lv_obj_add_style(cont_temp, &plain, 0);
         lv_obj_t * row_temp = lv_obj_create(cont_temp);
-        lv_obj_remove_flag(row_temp, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(row_temp, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(row_temp, "row_temp");
         lv_obj_set_align(row_temp, LV_ALIGN_TOP_MID);
         lv_obj_set_width(row_temp, 118);
@@ -445,7 +450,6 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_add_style(bar_temp, &bar_ind, LV_PART_INDICATOR);
 
         lv_obj_t * arc_humi = lv_arc_create(sensor_card);
-        lv_obj_remove_style(arc_humi, NULL, LV_PART_KNOB);
         lv_obj_set_name(arc_humi, "arc_humi");
         lv_obj_set_x(arc_humi, 204);
         lv_obj_set_y(arc_humi, 74);
@@ -459,15 +463,16 @@ lv_obj_t * device_status_main_create(void)
         lv_arc_set_value(arc_humi, 72);
         lv_obj_add_style(arc_humi, &arc_track, LV_PART_MAIN);
         lv_obj_add_style(arc_humi, &arc_ind, LV_PART_INDICATOR);
+        lv_obj_add_style(arc_humi, &arc_knob, LV_PART_KNOB);
         lv_obj_t * cont_humi = lv_obj_create(arc_humi);
-        lv_obj_remove_flag(cont_humi, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(cont_humi, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(cont_humi, "cont_humi");
         lv_obj_set_align(cont_humi, LV_ALIGN_CENTER);
         lv_obj_set_width(cont_humi, 118);
         lv_obj_set_height(cont_humi, 70);
         lv_obj_add_style(cont_humi, &plain, 0);
         lv_obj_t * row_humi = lv_obj_create(cont_humi);
-        lv_obj_remove_flag(row_humi, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(row_humi, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(row_humi, "row_humi");
         lv_obj_set_align(row_humi, LV_ALIGN_TOP_MID);
         lv_obj_set_width(row_humi, 118);
@@ -509,7 +514,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_add_style(bar_humi, &bar_ind, LV_PART_INDICATOR);
 
         lv_obj_t * io_card = lv_obj_create(lv_obj_0);
-        lv_obj_remove_flag(io_card, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(io_card, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(io_card, "io_card");
         lv_obj_set_x(io_card, 48);
         lv_obj_set_y(io_card, 378);
@@ -517,7 +522,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_height(io_card, 214);
         lv_obj_add_style(io_card, &card, 0);
         lv_obj_t * io_divider = lv_obj_create(io_card);
-        lv_obj_remove_flag(io_divider, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(io_divider, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(io_divider, "io_divider");
         lv_obj_set_x(io_divider, 230);
         lv_obj_set_y(io_divider, 20);
@@ -542,7 +547,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(di_caption, lv_color_hex(0x9aa0a6), 0);
 
         lv_obj_t * di1 = lv_obj_create(io_card);
-        lv_obj_remove_flag(di1, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(di1, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(di1, "di1");
         lv_obj_set_x(di1, 16);
         lv_obj_set_y(di1, 84);
@@ -556,7 +561,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(lv_label_0, lv_color_hex(0xffffff), 0);
 
         lv_obj_t * di2 = lv_obj_create(io_card);
-        lv_obj_remove_flag(di2, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(di2, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(di2, "di2");
         lv_obj_set_x(di2, 120);
         lv_obj_set_y(di2, 84);
@@ -570,7 +575,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(lv_label_1, lv_color_hex(0x6b7075), 0);
 
         lv_obj_t * di3 = lv_obj_create(io_card);
-        lv_obj_remove_flag(di3, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(di3, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(di3, "di3");
         lv_obj_set_x(di3, 16);
         lv_obj_set_y(di3, 126);
@@ -584,7 +589,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(lv_label_2, lv_color_hex(0x6b7075), 0);
 
         lv_obj_t * di4 = lv_obj_create(io_card);
-        lv_obj_remove_flag(di4, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(di4, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(di4, "di4");
         lv_obj_set_x(di4, 120);
         lv_obj_set_y(di4, 126);
@@ -614,7 +619,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(do_caption, lv_color_hex(0x9aa0a6), 0);
 
         lv_obj_t * do1 = lv_obj_create(io_card);
-        lv_obj_remove_flag(do1, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(do1, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(do1, "do1");
         lv_obj_set_x(do1, 246);
         lv_obj_set_y(do1, 84);
@@ -628,7 +633,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(lv_label_4, lv_color_hex(0xffffff), 0);
 
         lv_obj_t * do2 = lv_obj_create(io_card);
-        lv_obj_remove_flag(do2, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(do2, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(do2, "do2");
         lv_obj_set_x(do2, 346);
         lv_obj_set_y(do2, 84);
@@ -642,7 +647,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(lv_label_5, lv_color_hex(0x6b7075), 0);
 
         lv_obj_t * do3 = lv_obj_create(io_card);
-        lv_obj_remove_flag(do3, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(do3, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(do3, "do3");
         lv_obj_set_x(do3, 246);
         lv_obj_set_y(do3, 126);
@@ -656,7 +661,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(lv_label_6, lv_color_hex(0x6b7075), 0);
 
         lv_obj_t * do4 = lv_obj_create(io_card);
-        lv_obj_remove_flag(do4, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(do4, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(do4, "do4");
         lv_obj_set_x(do4, 346);
         lv_obj_set_y(do4, 126);
@@ -670,7 +675,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(lv_label_7, lv_color_hex(0x6b7075), 0);
 
         lv_obj_t * alarm_card = lv_obj_create(lv_obj_0);
-        lv_obj_remove_flag(alarm_card, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(alarm_card, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(alarm_card, "alarm_card");
         lv_obj_set_x(alarm_card, 520);
         lv_obj_set_y(alarm_card, 378);
@@ -686,7 +691,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(alarm_title, lv_color_hex(0x17191c), 0);
 
         lv_obj_t * alarm_table = lv_obj_create(alarm_card);
-        lv_obj_remove_flag(alarm_table, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(alarm_table, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(alarm_table, "alarm_table");
         lv_obj_set_x(alarm_table, 20);
         lv_obj_set_y(alarm_table, 52);
@@ -727,7 +732,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(th_level, lv_color_hex(0x9aa0a6), 0);
 
         lv_obj_t * hline_1 = lv_obj_create(alarm_table);
-        lv_obj_remove_flag(hline_1, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(hline_1, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(hline_1, "hline_1");
         lv_obj_set_x(hline_1, 8);
         lv_obj_set_y(hline_1, 28);
@@ -760,7 +765,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(r1_msg, lv_color_hex(0x4c5257), 0);
 
         lv_obj_t * r1_badge = lv_obj_create(alarm_table);
-        lv_obj_remove_flag(r1_badge, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(r1_badge, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(r1_badge, "r1_badge");
         lv_obj_set_x(r1_badge, 394);
         lv_obj_set_y(r1_badge, 42);
@@ -776,7 +781,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(lv_label_8, lv_color_hex(0xffffff), 0);
 
         lv_obj_t * hline_2 = lv_obj_create(alarm_table);
-        lv_obj_remove_flag(hline_2, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(hline_2, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(hline_2, "hline_2");
         lv_obj_set_x(hline_2, 8);
         lv_obj_set_y(hline_2, 74);
@@ -809,7 +814,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(r2_msg, lv_color_hex(0x4c5257), 0);
 
         lv_obj_t * r2_badge = lv_obj_create(alarm_table);
-        lv_obj_remove_flag(r2_badge, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(r2_badge, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(r2_badge, "r2_badge");
         lv_obj_set_x(r2_badge, 394);
         lv_obj_set_y(r2_badge, 82);
@@ -825,7 +830,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(lv_label_9, lv_color_hex(0xffffff), 0);
 
         lv_obj_t * hline_3 = lv_obj_create(alarm_table);
-        lv_obj_remove_flag(hline_3, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(hline_3, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(hline_3, "hline_3");
         lv_obj_set_x(hline_3, 8);
         lv_obj_set_y(hline_3, 114);
@@ -858,7 +863,7 @@ lv_obj_t * device_status_main_create(void)
         lv_obj_set_style_text_color(r3_msg, lv_color_hex(0x4c5257), 0);
 
         lv_obj_t * r3_badge = lv_obj_create(alarm_table);
-        lv_obj_remove_flag(r3_badge, LV_OBJ_FLAG_SCROLLABLE);
+        lv_obj_set_flag(r3_badge, LV_OBJ_FLAG_SCROLLABLE, false);
         lv_obj_set_name(r3_badge, "r3_badge");
         lv_obj_set_x(r3_badge, 394);
         lv_obj_set_y(r3_badge, 122);

@@ -1,13 +1,13 @@
 /*******************************************************************************
  * Size: 16 px
  * Bpp: 4
- * Opts: --font D:\LVGL_project\device_status\fonts\ttf\DengXian.ttf --size 16 --bpp 4 --no-compress --range 0x20-0x7F --symbols °℃严中传偏入内冷出动势压告器备字容带常库度异录待态总感报振据数时机水泵温湿状离等级线缩行览警记设趋载输过运送重量门间阀风高 --format lvgl --lv-include lvgl.h -o D:\LVGL_project\device_status\fonts\font_body_default_data.c
+ * Opts: --font D:\LVGL_project\device_status\fonts\ttf\DengXian.ttf --size 16 --bpp 4 --no-compress --range 0x20-0x7F --symbols °℃严中传偏入内冷出动势压告器备字容带常库度异录待态总感报振据数时机水泵温湿状离等级线缩行览警记设趋载输过运送重量门间阀风高 --format lvgl -o D:\LVGL_project\device_status\fonts\font_body_default_data.c
  ******************************************************************************/
 
 #ifdef LV_LVGL_H_INCLUDE_SIMPLE
 #include "lvgl.h"
 #else
-#include "lvgl.h"
+#include "lvgl/lvgl.h"
 #endif
 
 #ifndef FONT_BODY_DEFAULT_DATA

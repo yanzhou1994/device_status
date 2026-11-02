@@ -28,12 +28,12 @@
 	  Regenerate the C arrays with: python scripts/gen_fonts.py
 	-->
 	<fonts if_target="default">
-		<bin name="font_title" src_path="fonts/ttf/Dengb.ttf" size="26" bpp="4" as_file="false" />
-		<bin name="font_value" src_path="fonts/ttf/Dengb.ttf" size="30" bpp="4" as_file="false" />
-		<bin name="font_h3" src_path="fonts/ttf/Dengb.ttf" size="18" bpp="4" as_file="false" />
-		<bin name="font_h4" src_path="fonts/ttf/Dengb.ttf" size="16" bpp="4" as_file="false" />
-		<bin name="font_body" src_path="fonts/ttf/DengXian.ttf" size="16" bpp="4" as_file="false" />
-		<bin name="font_small" src_path="fonts/ttf/DengXian.ttf" size="14" bpp="4" as_file="false" />
+		<bin name="font_title" src_path="fonts/ttf/Dengb.ttf" size="26" bpp="4" range="0x20-0x7F" symbols="°℃严中传偏入内冷出动势压告器备字容带常库度异录待态总感报振据数时机水泵温湿状离等级线缩行览警记设趋载输过运送重量门间阀风高" as_file="false" />
+		<bin name="font_value" src_path="fonts/ttf/Dengb.ttf" size="30" bpp="4" range="0x20-0x7F" symbols="°℃严中传偏入内冷出动势压告器备字容带常库度异录待态总感报振据数时机水泵温湿状离等级线缩行览警记设趋载输过运送重量门间阀风高" as_file="false" />
+		<bin name="font_h3" src_path="fonts/ttf/Dengb.ttf" size="18" bpp="4" range="0x20-0x7F" symbols="°℃严中传偏入内冷出动势压告器备字容带常库度异录待态总感报振据数时机水泵温湿状离等级线缩行览警记设趋载输过运送重量门间阀风高" as_file="false" />
+		<bin name="font_h4" src_path="fonts/ttf/Dengb.ttf" size="16" bpp="4" range="0x20-0x7F" symbols="°℃严中传偏入内冷出动势压告器备字容带常库度异录待态总感报振据数时机水泵温湿状离等级线缩行览警记设趋载输过运送重量门间阀风高" as_file="false" />
+		<bin name="font_body" src_path="fonts/ttf/DengXian.ttf" size="16" bpp="4" range="0x20-0x7F" symbols="°℃严中传偏入内冷出动势压告器备字容带常库度异录待态总感报振据数时机水泵温湿状离等级线缩行览警记设趋载输过运送重量门间阀风高" as_file="false" />
+		<bin name="font_small" src_path="fonts/ttf/DengXian.ttf" size="14" bpp="4" range="0x20-0x7F" symbols="°℃严中传偏入内冷出动势压告器备字容带常库度异录待态总感报振据数时机水泵温湿状离等级线缩行览警记设趋载输过运送重量门间阀风高" as_file="false" />
 	</fonts>
 
 	<styles>

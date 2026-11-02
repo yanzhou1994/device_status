@@ -77,7 +77,7 @@ LVGL 内置字体不含汉字，工程用 Windows「等线 / 等线 Bold」烘�
 | `font_body` | 16 | 正文 |
 | `font_small` | 14 | 表头 / 说明 / 单位 |
 
-只包含界面实际用到的字形（约 120 个），6 个文件合计约 720 KB。
+只包含界面实际用到的字形（62 个非 ASCII 字符 + ASCII），6 个文件合计约 750 KB。
 
 **改动了界面文字后要重新生成字体**，否则新字会显示成方框：
 
@@ -85,8 +85,37 @@ LVGL 内置字体不含汉字，工程用 Windows「等线 / 等线 Bold」烘�
 python scripts/gen_fonts.py
 ```
 
-脚本会自动扫描 `*.c/*.h/*.xml` 收集所有非 ASCII 字符（`°` 也包含），
-再调用 `npx lv_font_conv` 输出到 `fonts/`。需要 Node.js。
+脚本会：扫描 `*.c/*.h/*.xml` 收集所有非 ASCII 字符（`°` 也包含）→ 把字符表写回
+`globals.xml` 的 `range` / `symbols` → 调用 `npx lv_font_conv` 输出到 `fonts/`。需要 Node.js。
+
+> **坑：编辑器会自己重建字体，并清掉中文字形**
+>
+> LVGL Pro Editor 在 Regenerate / 构建预览时会按 `globals.xml` 的字体定义重新生成
+> `fonts/*_default_data.c`。若 `<bin>` 没写 `symbols`，编辑器只烘焙 `0x20-0x7F`，
+> 于是所有汉字从字体里消失 —— 预览界面看起来“一个字都没有”（拉丁字母数字仍在）。
+>
+> 判据：`fonts/font_title_default_data.c` 头部 `Opts:` 行里没有 `--symbols`，
+> 或文件里的 `.list_length` 为 0，就是被覆盖了。修复：`python scripts/gen_fonts.py`。
+>
+> 现在 6 个 `<bin>` 都带上了 `range="0x20-0x7F" symbols="…"`，编辑器再生成时不会丢字。
+
+## 中文不显示的三类原因（按症状区分）
+
+| 症状 | 原因 | 处理 |
+|---|---|---|
+| 汉字整条消失、英文数字正常 | 字体里没有 CJK 字形（`globals.xml` 缺 `symbols`，被编辑器按 ASCII 重烘） | 跑 `python scripts/gen_fonts.py` |
+| 汉字变乱码 / 方块 | 源文件被按 GBK 解析（`C4819`、`C2001` 换行符报错） | 源文件保持 UTF-8 无 BOM；MSVC 加 `/utf-8`；emcc/clang 默认 UTF-8 |
+| 预览编译报 `'lvgl.h' file not found` | 字体 .c 用了 `--lv-include lvgl.h`，而预览的头文件在 `libs/include/lvgl/lvgl.h` | 烘焙时不要传 `--lv-include`，用 lv_font_conv 默认的 `lvgl/lvgl.h` |
+
+自查一条命令：
+
+```bash
+grep -m1 "Opts:" fonts/font_title_default_data.c   # 要有 --symbols，且没有 --lv-include lvgl.h
+grep -c "list_length = 0" fonts/*_default_data.c   # 中文为 0 就是没烘焙进去
+```
+
+预览的 wasm 里字体对象是否变大，也可以用来确认预览确实用上了新字体：
+`preview-build/project/CMakeFiles/lib-ui.dir/fonts/*.o` 单个从 6~15 KB 涨到 12~40 KB 即正常。
 
 ## 说明
 

@@ -31,6 +31,18 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 
 # ---------------------------------------------------------------------------
+#  Source encoding
+#
+#  All UI sources (XML, generated *.c, fonts) are UTF-8 without BOM. MSVC
+#  defaults to the system code page (GBK/936) and would silently mis-decode
+#  Chinese string literals -> C4819 / mojibake / dropped glyphs. Force UTF-8
+#  for every target created from here on (lib-ui, lvgl, the executable).
+# ---------------------------------------------------------------------------
+if(MSVC)
+  add_compile_options(/utf-8)
+endif()
+
+# ---------------------------------------------------------------------------
 #  LVGL source tree
 #
 #  Prefer an already existing checkout (fast, works offline). Point
