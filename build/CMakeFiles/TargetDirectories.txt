@@ -1,0 +1,10 @@
+D:/LVGL_project/device_status/build/CMakeFiles/lvgl_simulator.dir
+D:/LVGL_project/device_status/build/CMakeFiles/run.dir
+D:/LVGL_project/device_status/build/CMakeFiles/INSTALL.dir
+D:/LVGL_project/device_status/build/CMakeFiles/ALL_BUILD.dir
+D:/LVGL_project/device_status/build/CMakeFiles/ZERO_CHECK.dir
+D:/LVGL_project/device_status/build/lvgl/CMakeFiles/lvgl.dir
+D:/LVGL_project/device_status/build/lvgl/CMakeFiles/INSTALL.dir
+D:/LVGL_project/device_status/build/ui/CMakeFiles/lib-ui.dir
+D:/LVGL_project/device_status/build/ui/CMakeFiles/lib-ui_user.dir
+D:/LVGL_project/device_status/build/ui/CMakeFiles/INSTALL.dir

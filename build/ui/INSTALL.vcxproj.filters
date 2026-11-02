@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\LVGL_project\device_status\build\CMakeFiles\ccf5587d5cbe3e5e8a2097d074bb32e2\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{7229761A-F208-31F1-8ABC-80E6CD24C6BB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

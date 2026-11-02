@@ -1,0 +1,12 @@
+list(
+  APPEND
+  LV_EDITOR_PROJECT_SOURCES
+  ${CMAKE_CURRENT_LIST_DIR}/device_status_gen.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/font_body_default_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/font_h3_default_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/font_h4_default_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/font_small_default_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/font_title_default_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/fonts/font_value_default_data.c
+  ${CMAKE_CURRENT_LIST_DIR}/screens/device_status_main_gen.c
+)

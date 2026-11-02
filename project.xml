@@ -1,0 +1,7 @@
+<project lvgl_version="9.5.0" name="device_status">
+	<targets>
+		<target name="default">
+			<display width="1080" height="600" />
+		</target>
+	</targets>
+</project>

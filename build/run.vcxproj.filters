@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\LVGL_project\device_status\build\CMakeFiles\fc485df2fe7fe3fb338799765a11845f\run.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="D:\LVGL_project\device_status\sim\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="D:\LVGL_project\device_status\build\CMakeFiles\run" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{7229761A-F208-31F1-8ABC-80E6CD24C6BB}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

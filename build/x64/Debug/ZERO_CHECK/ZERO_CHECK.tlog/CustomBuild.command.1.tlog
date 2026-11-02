@@ -1,0 +1,10 @@
+^D:\LVGL_PROJECT\DEVICE_STATUS\BUILD\CMAKEFILES\FC485DF2FE7FE3FB338799765A11845F\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/LVGL_project/device_status/sim -BD:/LVGL_project/device_status/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/LVGL_project/device_status/build/lvgl_simulator.slnx
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

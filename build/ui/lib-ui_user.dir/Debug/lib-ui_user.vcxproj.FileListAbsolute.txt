@@ -1,0 +1,1 @@
+D:\LVGL_project\device_status\build\ui\lib-ui_user.dir\Debug\lib-ui_user.lib

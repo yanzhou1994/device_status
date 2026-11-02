@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Solution>
+	<Configurations>
+		<BuildType Name="Debug"/>
+		<BuildType Name="Release"/>
+		<BuildType Name="MinSizeRel"/>
+		<BuildType Name="RelWithDebInfo"/>
+		<Platform Name="x64"/>
+	</Configurations>
+	<Project Path="ALL_BUILD.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="80a0773f-ee4c-38ef-b6ad-d5f001569c94" DefaultStartup="true">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="ui/lib-ui.vcxproj"/>
+		<BuildDependency Project="ui/lib-ui_user.vcxproj"/>
+		<BuildDependency Project="lvgl/lvgl.vcxproj"/>
+		<BuildDependency Project="lvgl_simulator.vcxproj"/>
+	</Project>
+	<Project Path="INSTALL.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="3cfeab78-307d-3959-ad42-2e279cbccaec">
+		<BuildDependency Project="ALL_BUILD.vcxproj"/>
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<Build Solution="Debug|*" Project="false"/>
+		<Build Solution="Release|*" Project="false"/>
+		<Build Solution="MinSizeRel|*" Project="false"/>
+		<Build Solution="RelWithDebInfo|*" Project="false"/>
+	</Project>
+	<Project Path="ZERO_CHECK.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="d810b084-fc05-30b8-978b-73afd4fc24aa"/>
+	<Project Path="ui/lib-ui.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="07866c44-8147-3530-a383-4d222545e346">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="ui/lib-ui_user.vcxproj"/>
+		<BuildDependency Project="lvgl/lvgl.vcxproj"/>
+	</Project>
+	<Project Path="ui/lib-ui_user.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="26e35e2e-6526-326c-9884-aeddeb7c06b0">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="lvgl/lvgl.vcxproj"/>
+	</Project>
+	<Project Path="lvgl/lvgl.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="450ee781-d495-3306-b3d4-17569d3b09df">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+	</Project>
+	<Project Path="lvgl_simulator.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="e2a7d612-aef3-39f3-a725-f6c5c934ca4c">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="ui/lib-ui.vcxproj"/>
+		<BuildDependency Project="lvgl/lvgl.vcxproj"/>
+	</Project>
+	<Project Path="run.vcxproj" Type="8bc9ceb8-8b4a-11d0-8d11-00a0c91bc942" Id="a3a67f62-7792-3470-bd05-06451986f762">
+		<BuildDependency Project="ZERO_CHECK.vcxproj"/>
+		<BuildDependency Project="lvgl_simulator.vcxproj"/>
+		<Build Solution="Debug|*" Project="false"/>
+		<Build Solution="Release|*" Project="false"/>
+		<Build Solution="MinSizeRel|*" Project="false"/>
+		<Build Solution="RelWithDebInfo|*" Project="false"/>
+	</Project>
+</Solution>
